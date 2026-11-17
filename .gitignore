@@ -1,0 +1,5 @@
+incoming-products.json
+deals.json.tmp
+feeds/
+.env
+.env.*

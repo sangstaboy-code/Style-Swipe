@@ -1,0 +1,314 @@
+{
+  "updated": "2026-11-17",
+  "deals": [
+    {
+      "id": "landsend-canvas-chore-jacket-stone",
+      "name": "Men's Canvas Chore Jacket",
+      "brand": "Lands' End",
+      "store": "Lands' End",
+      "category": "outerwear",
+      "price": 54.97,
+      "was": 109.95,
+      "url": "https://www.landsend.com/products/mens-canvas-chore-jacket/id_390093",
+      "image": "",
+      "color": "#b9ab8f",
+      "colors": [
+        "cream",
+        "tan"
+      ],
+      "tags": [
+        "workwear",
+        "minimal"
+      ],
+      "wildcard": false,
+      "checked": "page",
+      "note": "Light Stone. Check your size at checkout.",
+      "added": "2026-11-17"
+    },
+    {
+      "id": "timberland-washed-canvas-jacket-brown",
+      "name": "Brown Washed Canvas Jacket",
+      "brand": "Timberland",
+      "store": "PacSun",
+      "category": "outerwear",
+      "price": 98.99,
+      "was": 110.0,
+      "url": "https://www.pacsun.com/timberland/brown-washed-canvas-jacket-7602220.html",
+      "image": "https://www.pacsun.com/dw/image/v2/AAJE_PRD/on/demandware.static/-/Sites-pacsun_storefront_catalog/default/dw846b217a/product_images/0201124050005NEW_00_020.jpg?sw=300",
+      "color": "#6b4a2f",
+      "colors": [
+        "brown"
+      ],
+      "tags": [
+        "workwear",
+        "vintage"
+      ],
+      "wildcard": false,
+      "checked": "page",
+      "note": "Listed as pre-order. Sizes S to XL shown.",
+      "added": "2026-11-17"
+    },
+    {
+      "id": "carhartt-wip-module-script-jacket",
+      "name": "Module Script Jacket",
+      "brand": "Carhartt WIP",
+      "store": "Carhartt WIP",
+      "category": "outerwear",
+      "price": 105.0,
+      "was": 175.0,
+      "url": "https://us.carhartt-wip.com/en-us/collections/men-sale-jackets",
+      "image": "",
+      "color": "#1f2a44",
+      "colors": [
+        "navy",
+        "black"
+      ],
+      "tags": [
+        "workwear",
+        "streetwear"
+      ],
+      "wildcard": false,
+      "checked": "listing",
+      "note": "Cozy Blue / Black. Found on the sale page, so find it in the list and confirm the price.",
+      "added": "2026-11-17"
+    },
+    {
+      "id": "levis-501-vintage-graphic-tee-white",
+      "name": "501 Vintage Graphic T-Shirt",
+      "brand": "Levi's",
+      "store": "Levi's",
+      "category": "tops",
+      "price": 17.98,
+      "was": 39.5,
+      "url": "https://www.levi.com/US/en_US/sale/mens-sale/levis-501-vintage-graphic-t-shirt/p/873730038",
+      "image": "https://lsco.scene7.com/is/image/lsco/873730038-front-pdp?fmt=jpeg&qlt=70&resMode=sharp2&fit=crop,1&op_usm=0.6,0.6,8&wid=1200&hei=630",
+      "color": "#e9e4d8",
+      "colors": [
+        "white",
+        "cream"
+      ],
+      "tags": [
+        "graphic-tee",
+        "vintage"
+      ],
+      "wildcard": false,
+      "checked": "page",
+      "note": "White. Size availability shows after you pick a size.",
+      "added": "2026-11-17"
+    },
+    {
+      "id": "club-monaco-relaxed-waffle-knit-shirt-tan",
+      "name": "Relaxed Waffle Knit Shirt",
+      "brand": "Club Monaco",
+      "store": "Club Monaco",
+      "category": "knitwear",
+      "price": 99.0,
+      "was": 129.5,
+      "url": "https://www.clubmonaco.com/products/relaxed-waffle-knit-shirt-795911818-235",
+      "image": "",
+      "color": "#b8a07e",
+      "colors": [
+        "tan"
+      ],
+      "tags": [
+        "waffle-knit",
+        "minimal",
+        "preppy"
+      ],
+      "wildcard": false,
+      "checked": "page",
+      "note": "Light Tan Mix. Final sale, only 1 unit left, size unknown.",
+      "added": "2026-11-17"
+    },
+    {
+      "id": "josbank-traveler-merino-polo-sweater-tan",
+      "name": "Traveler Performance Merino Polo Sweater",
+      "brand": "Jos. A. Bank",
+      "store": "Jos. A. Bank",
+      "category": "knitwear",
+      "price": 39.99,
+      "was": 69.0,
+      "url": "https://www.josbank.com/c/sweaters/f/color/Tan/style/Polo",
+      "image": "",
+      "color": "#b8a07e",
+      "colors": [
+        "tan"
+      ],
+      "tags": [
+        "waffle-knit",
+        "preppy",
+        "minimal"
+      ],
+      "wildcard": false,
+      "checked": "listing",
+      "note": "Tailored fit, clearance. Found in the tan polo sweater list.",
+      "added": "2026-11-17"
+    },
+    {
+      "id": "adidas-firebird-baggy-track-pants-navy",
+      "name": "Firebird Adicolor Baggy Track Pants",
+      "brand": "adidas Originals",
+      "store": "Foot Locker",
+      "category": "bottoms",
+      "price": 60.0,
+      "was": 80.0,
+      "url": "https://www.footlocker.com/product/~/IZ2466.html",
+      "image": "",
+      "color": "#1d2b53",
+      "colors": [
+        "navy",
+        "white"
+      ],
+      "tags": [
+        "sporty",
+        "streetwear"
+      ],
+      "wildcard": false,
+      "checked": "listing",
+      "note": "Navy. Baggy fit.",
+      "added": "2026-11-17"
+    },
+    {
+      "id": "pacsun-levis-578-baggy-jeans-light",
+      "name": "578 Baggy Jeans, Bag Secured",
+      "brand": "Levi's",
+      "store": "PacSun",
+      "category": "bottoms",
+      "price": 31.49,
+      "was": 69.5,
+      "url": "https://www.pacsun.com/levis/mens-578-baggy-jeans-light-indigo-9532359.html",
+      "image": "https://www.pacsun.com/dw/image/v2/AAJE_PRD/on/demandware.static/-/Sites-pacsun_storefront_catalog/default/dw57502e6d/product_images/0135115090070NEW_00_510.jpg?sw=300",
+      "color": "#8fb0d0",
+      "colors": [
+        "light-blue"
+      ],
+      "tags": [
+        "baggy-denim",
+        "vintage"
+      ],
+      "wildcard": false,
+      "checked": "page",
+      "note": "Only 32 inch inseam is offered here, which runs short for a 34 inseam.",
+      "added": "2026-11-17",
+      "fitIssue": true
+    },
+    {
+      "id": "cos-pleated-wide-leg-pants-dark-green",
+      "name": "Pleated Wide-Leg Pants",
+      "brand": "COS",
+      "store": "COS",
+      "category": "bottoms",
+      "price": 69.5,
+      "was": 139.0,
+      "url": "https://www.cos.com/en-us/men/menswear/trousers/relaxed-fit/wideleg/product/pleated-wide-leg-trousers-dark-green-1310975001",
+      "image": "",
+      "color": "#2f4a3a",
+      "colors": [
+        "green",
+        "olive"
+      ],
+      "tags": [
+        "pleated-trousers",
+        "minimal"
+      ],
+      "wildcard": false,
+      "checked": "listing",
+      "note": "Final sale. Inseam is about 30 inches in a 32, so check length against your 34.",
+      "added": "2026-11-17",
+      "fitIssue": true
+    },
+    {
+      "id": "josbank-belvedere-palermo-penny-loafer",
+      "name": "Palermo Penny Loafers",
+      "brand": "Belvedere",
+      "store": "Jos. A. Bank",
+      "category": "shoes",
+      "price": 93.75,
+      "was": 125.0,
+      "url": "https://www.josbank.com/o/mens-brown-suede-loafers",
+      "image": "",
+      "color": "#6b3f26",
+      "colors": [
+        "brown"
+      ],
+      "tags": [
+        "loafers",
+        "preppy"
+      ],
+      "wildcard": false,
+      "checked": "listing",
+      "note": "Brown/Cognac. Find it in the list and check size availability.",
+      "added": "2026-11-17"
+    },
+    {
+      "id": "josbank-florsheim-remi-moc-penny-loafer",
+      "name": "Remi Moc Toe Penny Loafer",
+      "brand": "Florsheim",
+      "store": "Jos. A. Bank",
+      "category": "shoes",
+      "price": 104.62,
+      "was": 139.5,
+      "url": "https://www.josbank.com/o/mens-brown-suede-loafers",
+      "image": "",
+      "color": "#6b3f26",
+      "colors": [
+        "brown"
+      ],
+      "tags": [
+        "loafers",
+        "preppy",
+        "workwear"
+      ],
+      "wildcard": false,
+      "checked": "listing",
+      "note": "Brown/Cognac. Find it in the list and check size availability.",
+      "added": "2026-11-17"
+    },
+    {
+      "id": "rei-smartwool-intraknit-merino-quarter-zip",
+      "name": "Intraknit Merino Tech Quarter-Zip",
+      "brand": "Smartwool",
+      "store": "REI",
+      "category": "knitwear",
+      "price": 79.73,
+      "was": 170.0,
+      "url": "https://www.rei.com/product/233078/smartwool-intraknit-merino-tech-quarter-zip-pullover-mens",
+      "image": "",
+      "color": "#1c2a40",
+      "colors": [
+        "navy"
+      ],
+      "tags": [
+        "outdoor",
+        "technical"
+      ],
+      "wildcard": true,
+      "checked": "listing",
+      "note": "Deep Navy, size M. Discontinued, and the old price is REI's compared-to price.",
+      "added": "2026-11-17"
+    },
+    {
+      "id": "jcrew-factory-broken-in-crab-tee",
+      "name": "Broken-In Crab Graphic Tee",
+      "brand": "J.Crew Factory",
+      "store": "J.Crew Factory",
+      "category": "tops",
+      "price": 32.5,
+      "was": 54.5,
+      "url": "https://factory.jcrew.com/p/mens/categories/clothing/tees/graphic-tees/broken-in-crab-tee/A6711",
+      "image": "",
+      "color": "#d9d2c0",
+      "colors": [
+        "cream"
+      ],
+      "tags": [
+        "graphic-tee",
+        "preppy"
+      ],
+      "wildcard": true,
+      "checked": "listing",
+      "note": "A more playful graphic than your usual faded tees.",
+      "added": "2026-11-17"
+    }
+  ]
+}

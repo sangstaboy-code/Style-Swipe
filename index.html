@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Style Swipe</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#16130f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Style Swipe">
+<meta name="referrer" content="no-referrer">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-180.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="site-head">
+    <div class="brand">
+      <h1>Style Swipe</h1>
+      <p id="updated" class="sub">Loading deals</p>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <button class="tab is-active" role="tab" id="tab-swipe" data-view="swipe" aria-selected="true">Swipe</button>
+      <button class="tab" role="tab" id="tab-saved" data-view="saved" aria-selected="false">Saved <span id="saved-count" class="count">0</span></button>
+      <button class="tab" role="tab" id="tab-taste" data-view="taste" aria-selected="false">Taste</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="view-swipe" class="view is-active" aria-labelledby="tab-swipe">
+      <div id="stack" class="stack" aria-live="polite"></div>
+      <div id="empty" class="empty" hidden>
+        <h2>You're all caught up</h2>
+        <p>No more verified photo deals in this batch. Check Saved for what you kept. New listings appear when the deal feed is refreshed.</p>
+        <button id="reshow" class="btn ghost">Show passed deals again</button>
+      </div>
+      <div id="load-error" class="empty" hidden>
+        <h2>Couldn't load deals</h2>
+        <p>Check your connection and reopen the app.</p>
+      </div>
+      <div id="controls" class="controls" hidden>
+        <button id="btn-pass" class="round pass" aria-label="Pass (left arrow)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        <button id="btn-undo" class="round undo" aria-label="Undo last swipe (Z)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7L4 12l5 5M4 12h10a6 6 0 010 12" transform="translate(0 -3)"/></svg></button>
+        <button id="btn-save" class="round save" aria-label="Save (right arrow)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
+      </div>
+      <p id="hint" class="hint" hidden>Swipe right to save, left to pass. Arrow keys work too.</p>
+    </section>
+
+    <section id="view-saved" class="view" aria-labelledby="tab-saved">
+      <ul id="saved-list" class="saved-list"></ul>
+      <div id="saved-empty" class="empty" hidden>
+        <h2>Nothing saved yet</h2>
+        <p>Swipe right on a deal to keep it here.</p>
+      </div>
+    </section>
+
+    <section id="view-taste" class="view" aria-labelledby="tab-taste">
+      <div class="taste">
+        <div class="stats">
+          <div><b id="stat-saved">0</b><span>saved</span></div>
+          <div><b id="stat-passed">0</b><span>passed</span></div>
+        </div>
+        <h2>What I'm learning</h2>
+        <p class="sub">Starts from your style pictures and shifts with every swipe.</p>
+        <h3>Leaning toward</h3>
+        <ul id="likes" class="bars"></ul>
+        <h3>Leaning away from</h3>
+        <ul id="dislikes" class="bars neg"></ul>
+        <div class="actions">
+          <button id="copy-profile" class="btn">Copy my taste profile</button>
+          <button id="reset" class="btn ghost">Reset my taste</button>
+        </div>
+        <p id="copy-status" class="sub" role="status"></p>
+        <p class="sub small">Your swipes stay on this device. Copy the profile and paste it to Claude to tune the daily search.</p>
+        <textarea id="copy-fallback" class="copy-fallback" readonly aria-label="Taste profile text" hidden></textarea>
+      </div>
+    </section>
+  </main>
+</div>
+<script src="taste.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
