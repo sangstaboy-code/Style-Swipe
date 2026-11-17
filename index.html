@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-180.png">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=20261117c">
 </head>
 <body>
 <div class="app">
@@ -23,7 +23,7 @@
       <p id="updated" class="sub">Loading deals</p>
     </div>
     <nav class="tabs" role="tablist" aria-label="Sections">
-      <button class="tab is-active" role="tab" id="tab-swipe" data-view="swipe" aria-selected="true">Swipe</button>
+      <button class="tab is-active" role="tab" id="tab-swipe" data-view="swipe" aria-selected="true">Discover</button>
       <button class="tab" role="tab" id="tab-saved" data-view="saved" aria-selected="false">Saved <span id="saved-count" class="count">0</span></button>
       <button class="tab" role="tab" id="tab-taste" data-view="taste" aria-selected="false">Taste</button>
     </nav>
@@ -31,10 +31,23 @@
 
   <main>
     <section id="view-swipe" class="view is-active" aria-labelledby="tab-swipe">
+      <div class="discovery-toolbar">
+        <div class="feed-modes" role="group" aria-label="Feed type">
+          <button class="feed-mode is-active" data-mode="for-you">For You <span>60%</span></button>
+          <button class="feed-mode" data-mode="deals">Deals <span>25%</span></button>
+          <button class="feed-mode" data-mode="explore">Explore <span>15%</span></button>
+        </div>
+        <div class="feed-filters">
+          <label>Category <select id="category-filter"><option value="all">All clothing</option><option value="tops">Tops</option><option value="outerwear">Jackets</option><option value="bottoms">Pants</option><option value="shoes">Shoes</option><option value="accessories">Accessories</option></select></label>
+          <label>Price <select id="price-filter"><option value="all">Any price</option><option value="110">Under $110</option><option value="60">Under $60</option><option value="30">Under $30</option></select></label>
+          <label>Brand <select id="brand-filter"><option value="all">All brands</option></select></label>
+          <label>Labels <select id="label-filter"><option value="all">All</option><option value="indie">Independent</option></select></label>
+        </div>
+      </div>
       <div id="stack" class="stack" aria-live="polite"></div>
       <div id="empty" class="empty" hidden>
         <h2>You're all caught up</h2>
-        <p>No more verified photo deals in this batch. Check Saved for what you kept. New listings appear when the deal feed is refreshed.</p>
+        <p>No more clothing matches in this feed. Try another category or Explore. New items appear when the catalog is refreshed.</p>
         <button id="reshow" class="btn ghost">Show passed deals again</button>
       </div>
       <div id="load-error" class="empty" hidden>
@@ -80,7 +93,7 @@
     </section>
   </main>
 </div>
-<script src="taste.js"></script>
-<script src="app.js"></script>
+<script src="taste.js?v=20261117c"></script>
+<script src="app.js?v=20261117c"></script>
 </body>
 </html>

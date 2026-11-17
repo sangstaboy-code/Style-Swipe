@@ -41,6 +41,14 @@ main { flex: 1; min-height: 0; position: relative; }
 .view { display: none; height: 100%; }
 .view.is-active { display: flex; flex-direction: column; }
 #view-swipe { align-items: center; padding: 6px 16px 14px; }
+.discovery-toolbar { width: min(100%, 520px); display: grid; gap: 7px; padding-bottom: 9px; }
+.feed-modes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+.feed-mode { background: var(--panel); color: var(--muted); border: 1px solid var(--line); border-radius: 11px; padding: 9px 4px; font-size: 13px; font-weight: 750; }
+.feed-mode span { font-size: 10px; opacity: .75; }
+.feed-mode.is-active { background: var(--accent); color: #1b1408; border-color: var(--accent); }
+.feed-filters { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.feed-filters label { color: var(--muted); font-size: 11px; display: flex; gap: 6px; align-items: center; }
+.feed-filters select { background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 5px; max-width: 140px; }
 #view-saved, #view-taste { overflow-y: auto; padding: 8px 18px 28px; -webkit-overflow-scrolling: touch; }
 
 /* ---- deck ---- */
@@ -71,6 +79,7 @@ main { flex: 1; min-height: 0; position: relative; }
   position: absolute; top: 14px; left: 14px; z-index: 2;
   background: var(--accent); color: #1b1408; font-weight: 800; font-size: 20px; padding: 6px 12px; border-radius: 12px;
 }
+.badge.standard { font-size: 12px; background: #eef0e8; color: #2e322c; }
 .new, .wild {
   position: absolute; z-index: 2; right: 14px; font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 999px;
   background: rgba(22,19,15,.82); color: var(--text); border: 1px solid var(--line);

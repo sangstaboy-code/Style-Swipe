@@ -6,6 +6,7 @@
   // These are soft preferences, not filters: swipes can change the ranking.
   var PRIORS = {
     'theme:workwear': 1.2,
+    'theme:independent-brand': 0.7,
     'theme:vintage': 1.15,
     'theme:graphic-tee': 0.9,
     'theme:western-graphic': 0.9,
@@ -54,6 +55,7 @@
     if (!deal || !(deal.was > 0) || !(deal.price >= 0)) return 0;
     return Math.max(0, Math.round((1 - deal.price / deal.was) * 100));
   }
+  function isDeal(deal) { return !!deal && deal.was > deal.price && discountPct(deal) >= 10; }
 
   // Every property of a deal that the model learns from, as "kind:value" keys.
   function featuresOf(deal) {
@@ -76,7 +78,7 @@
     var base = sum / Math.sqrt(f.length);
     var bonus = Math.min(discountPct(deal), 60) / 60 * 0.4;
     // Deals with a known size problem (for example, the wrong inseam) sink in the deck.
-    var penalty = deal.fitIssue ? 0.5 : 0;
+    var penalty = (deal.fitIssue ? 0.5 : 0) + (deal.price > 110 ? Math.min(0.7, (deal.price - 110) / 300) : 0);
     return base + bonus - penalty;
   }
 
@@ -117,6 +119,35 @@
     return out;
   }
 
+  // Aim for 60% tailored, 25% deals, 15% exploration over 20 cards.
+  // If a lane is empty, use remaining verified inventory rather than repeat.
+  function buildDiscoveryQueue(deals, seen, weights, rand, mode) {
+    rand = rand || Math.random;
+    var unseen = deals.filter(function (d) { return !seen[d.id]; });
+    if (mode === 'deals') return buildQueue(unseen.filter(isDeal), {}, weights, rand, 0.15);
+    if (mode === 'explore') return shuffle(unseen, rand);
+    var ranked = unseen.slice().sort(function (a, b) { return score(b, weights) - score(a, weights); });
+    var dealsRanked = ranked.filter(isDeal);
+    var wild = shuffle(unseen, rand);
+    var out = [], used = {};
+    var slots = ['for-you','for-you','deals','for-you','explore','for-you','deals','for-you','explore','for-you',
+      'for-you','deals','for-you','explore','for-you','deals','for-you','for-you','deals','for-you'];
+    while (out.length < unseen.length) {
+      var kind = slots[out.length % 20];
+      var pool = kind === 'deals' ? dealsRanked : kind === 'explore' ? wild : ranked;
+      var choice = pool.find(function (d) { return !used[d.id]; }) || ranked.find(function (d) { return !used[d.id]; });
+      if (!choice) break;
+      used[choice.id] = true;
+      out.push(Object.assign({}, choice, { lane: kind === 'deals' && isDeal(choice) ? 'deals' : kind === 'explore' ? 'explore' : 'for-you' }));
+    }
+    return out;
+  }
+  function shuffle(items, rand) {
+    var a = items.slice();
+    for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(rand() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+    return a;
+  }
+
   var LABELS = { cat: 'Type', theme: 'Style', color: 'Color', brand: 'Brand', store: 'Store', price: 'Price', wild: 'Wildcards' };
 
   function prettyKey(key) {
@@ -147,8 +178,8 @@
   }
 
   var api = {
-    PRIORS: PRIORS, priceBand: priceBand, discountPct: discountPct, featuresOf: featuresOf,
-    score: score, learn: learn, unlearn: unlearn, buildQueue: buildQueue, summarize: summarize,
+    PRIORS: PRIORS, priceBand: priceBand, discountPct: discountPct, isDeal: isDeal, featuresOf: featuresOf,
+    score: score, learn: learn, unlearn: unlearn, buildQueue: buildQueue, buildDiscoveryQueue: buildDiscoveryQueue, summarize: summarize,
     prettyKey: prettyKey, safeUrl: safeUrl
   };
 

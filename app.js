@@ -7,7 +7,11 @@
   var data = { deals: [], updated: '' };
   var queue = [];
   var busy = false;
-  var MAX_PRICE = 110;
+  var feedMode = 'for-you';
+  var categoryFilter = 'all';
+  var priceFilter = 'all';
+  var brandFilter = 'all';
+  var labelFilter = 'all';
 
   function $(id) { return document.getElementById(id); }
 
@@ -88,10 +92,10 @@
     var pct = T.discountPct(deal);
 
     var media = visual(deal, 'media');
-    var badge = el('span', 'badge', '-' + pct + '%');
+    var badge = el('span', 'badge' + (T.isDeal(deal) ? '' : ' standard'), T.isDeal(deal) ? '-' + pct + '%' : 'STYLE PICK');
     media.appendChild(badge);
     if (deal.added && deal.added === data.updated) media.appendChild(el('span', 'new', 'New'));
-    if (deal.wildcard) media.appendChild(el('span', 'wild', 'Something different'));
+    if (deal.lane === 'explore' || deal.wildcard) media.appendChild(el('span', 'wild', 'Something different'));
     var stampSave = el('div', 'stamp stamp-save', 'SAVE');
     var stampPass = el('div', 'stamp stamp-pass', 'PASS');
     media.appendChild(stampSave);
@@ -103,13 +107,15 @@
     info.appendChild(el('h2', 'name', deal.name));
     var prices = el('div', 'prices');
     prices.appendChild(el('span', 'now', money(deal.price)));
-    prices.appendChild(el('span', 'was', money(deal.was)));
-    prices.appendChild(el('span', 'save-amt', 'save ' + money(deal.was - deal.price)));
+    if (T.isDeal(deal)) {
+      prices.appendChild(el('span', 'was', money(deal.was)));
+      prices.appendChild(el('span', 'save-amt', 'save ' + money(deal.was - deal.price)));
+    }
     info.appendChild(prices);
     if (deal.note) info.appendChild(el('p', 'note' + (deal.fitIssue ? ' warn' : ''), (deal.fitIssue ? 'Check fit: ' : '') + deal.note));
     var proof = deal.checked === 'page'
       ? 'Price seen on the product page, ' + fmtDate(data.updated)
-      : 'Price from a store list, ' + fmtDate(data.updated) + '. Confirm at checkout.';
+      : 'Catalog price as of ' + fmtDate(data.updated) + '. Confirm at checkout.';
     info.appendChild(el('p', 'proof ' + (deal.checked === 'page' ? 'ok' : 'soft'), proof));
     var url = T.safeUrl(deal.url);
     if (url) {
@@ -127,7 +133,14 @@
     var top = lockTop && queue.length ? queue[0] : null;
     var seenNow = Object.assign({}, state.seen);
     if (top) seenNow[top.id] = 'locked';
-    var rest = T.buildQueue(data.deals.filter(function (d) { return !(state.hiddenImages || {})[d.id]; }), seenNow, state.weights);
+    var filtered = data.deals.filter(function (d) {
+      return !(state.hiddenImages || {})[d.id] &&
+        (categoryFilter === 'all' || d.category === categoryFilter) &&
+        (priceFilter === 'all' || d.price <= Number(priceFilter)) &&
+        (brandFilter === 'all' || d.brand === brandFilter) &&
+        (labelFilter === 'all' || (d.tags || []).indexOf('independent-brand') >= 0);
+    });
+    var rest = T.buildDiscoveryQueue(filtered, seenNow, state.weights, Math.random, feedMode);
     queue = top ? [top].concat(rest) : rest;
   }
 
@@ -142,7 +155,9 @@
     if (queue[1]) stack.appendChild(buildCard(queue[1], false));
     stack.appendChild(buildCard(queue[0], true));
     var left = queue.length;
-    $('updated').textContent = left + (left === 1 ? ' deal' : ' deals') + ' to go · updated ' + fmtDate(data.updated) +
+    var totalBrands = new Set(data.deals.map(function (d) { return d.brand; })).size;
+    $('updated').textContent = left + ' to swipe · ' + data.deals.length + ' items from ' + totalBrands +
+      (totalBrands === 1 ? ' brand' : ' brands') + ' · updated ' + fmtDate(data.updated) +
       (daysOld(data.updated) > 3 ? ' (older than usual)' : '');
   }
 
@@ -253,8 +268,10 @@
       body.appendChild(el('p', 'name', d.name));
       var pr = el('p', 'prices');
       pr.appendChild(el('span', 'now', money(d.price)));
-      pr.appendChild(el('span', 'was', money(d.was)));
-      pr.appendChild(el('span', 'pct', '-' + T.discountPct(d) + '%'));
+      if (T.isDeal(d)) {
+        pr.appendChild(el('span', 'was', money(d.was)));
+        pr.appendChild(el('span', 'pct', '-' + T.discountPct(d) + '%'));
+      }
       body.appendChild(pr);
       body.appendChild(el('p', 'sub small', 'Saved ' + new Date(it.savedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) +
         '. Price as of ' + fmtDate(data.updated || '') + ', so recheck before buying.'));
@@ -366,6 +383,17 @@
 
   function init() {
     load();
+    document.querySelectorAll('.feed-mode').forEach(function (b) {
+      b.addEventListener('click', function () {
+        feedMode = b.dataset.mode;
+        document.querySelectorAll('.feed-mode').forEach(function (x) { x.classList.toggle('is-active', x === b); });
+        rebuildQueue(false); renderDeck();
+      });
+    });
+    $('category-filter').addEventListener('change', function (e) { categoryFilter = e.target.value; rebuildQueue(false); renderDeck(); });
+    $('price-filter').addEventListener('change', function (e) { priceFilter = e.target.value; rebuildQueue(false); renderDeck(); });
+    $('brand-filter').addEventListener('change', function (e) { brandFilter = e.target.value; rebuildQueue(false); renderDeck(); });
+    $('label-filter').addEventListener('change', function (e) { labelFilter = e.target.value; rebuildQueue(false); renderDeck(); });
     document.querySelectorAll('.tab').forEach(function (b) {
       b.addEventListener('click', function () { show(b.dataset.view); });
     });
@@ -395,9 +423,10 @@
       data.updated = j.updated || '';
       data.deals = (j.deals || []).filter(function (d) {
         return d && d.id && d.name && d.brand && d.store && T.safeUrl(d.url) && T.safeUrl(d.image) &&
-          Number.isFinite(d.price) && Number.isFinite(d.was) && d.price > 0 &&
-          d.price <= MAX_PRICE && d.was > d.price;
+          Number.isFinite(d.price) && d.price > 0 && (!Number.isFinite(d.was) || d.was >= d.price);
       });
+      var brands = Array.from(new Set(data.deals.map(function (d) { return d.brand; }))).sort();
+      brands.forEach(function (name) { var option = el('option', '', name); option.value = name; $('brand-filter').appendChild(option); });
       rebuildQueue(false);
       renderDeck();
     }).catch(function () { clearTimeout(timer); fail(); });

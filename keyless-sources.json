@@ -1,0 +1,27 @@
+{
+  "description": "Candidate public Shopify storefronts. The collector checks robots.txt and access before retrieving products. Inclusion is not confirmation of permission or availability.",
+  "stores": [
+    {"name": "3sixteen", "origin": "https://www.3sixteen.com", "maxPages": 2},
+    {"name": "Freenote Cloth", "origin": "https://freenotecloth.com", "maxPages": 2},
+    {"name": "Dehen 1920", "origin": "https://dehen1920.com", "maxPages": 2},
+    {"name": "Rogue Territory", "origin": "https://www.rogueterritory.com", "maxPages": 2},
+    {"name": "Corridor", "origin": "https://corridornyc.com", "maxPages": 2},
+    {"name": "Alex Mill", "origin": "https://www.alexmill.com", "maxPages": 2},
+    {"name": "Knickerbocker", "origin": "https://www.knickerbocker.nyc", "maxPages": 2},
+    {"name": "Manresa", "origin": "https://manresaclothing.com", "maxPages": 2},
+    {"name": "Imogene + Willie", "origin": "https://imogeneandwillie.com", "maxPages": 2},
+    {"name": "Howler Brothers", "origin": "https://howlerbros.com", "maxPages": 2},
+    {"name": "Katin", "origin": "https://katinusa.com", "maxPages": 2},
+    {"name": "Standard & Strange", "origin": "https://standardandstrange.com", "maxPages": 2},
+    {"name": "Blue Owl Workshop", "origin": "https://www.blueowl.us", "maxPages": 2},
+    {"name": "Canoe Club", "origin": "https://shopcanoeclub.com", "maxPages": 2},
+    {"name": "Snake Oil Provisions", "origin": "https://www.snakeoilprovisions.com", "maxPages": 2},
+    {"name": "Taylor Stitch", "origin": "https://www.taylorstitch.com", "maxPages": 3},
+    {"name": "Tentree", "origin": "https://www.tentree.com", "maxPages": 3},
+    {"name": "Allbirds", "origin": "https://www.allbirds.com", "maxPages": 2},
+    {"name": "Chubbies", "origin": "https://www.chubbiesshorts.com", "maxPages": 2},
+    {"name": "Kotn", "origin": "https://kotn.com", "maxPages": 2},
+    {"name": "Pact", "origin": "https://wearpact.com", "maxPages": 2}
+  ],
+  "productPages": []
+}
