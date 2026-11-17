@@ -56,6 +56,13 @@
     return Math.max(0, Math.round((1 - deal.price / deal.was) * 100));
   }
   function isDeal(deal) { return !!deal && deal.was > deal.price && discountPct(deal) >= 10; }
+  function isMajorBrand(deal) {
+    var name = [deal && deal.brand, deal && deal.store].filter(Boolean).join(' ').toLowerCase();
+    return /\b(nike|carhartt|skims|adidas|calvin klein|levi'?s|the north face|patagonia|ralph lauren|polo|new balance|converse|vans|under armour|puma|reebok|gap|abercrombie|hollister|american eagle|champion|columbia|lululemon|urban outfitters|h&m|zara|uniqlo|asos|gymshark|alo yoga|vuori|birkenstock|dr martens|timberland|coach|tommy hilfiger|dickies|crocs|brooks|asics|on running|allbirds)\b/i.test(name);
+  }
+  function isBigBrandSteal(deal, minimum) {
+    return isMajorBrand(deal) && discountPct(deal) >= (minimum == null ? 30 : minimum);
+  }
 
   // Every property of a deal that the model learns from, as "kind:value" keys.
   function featuresOf(deal) {
@@ -76,7 +83,10 @@
     var sum = 0;
     for (var i = 0; i < f.length; i++) sum += weights[f[i]] || 0;
     var base = sum / Math.sqrt(f.length);
-    var bonus = Math.min(discountPct(deal), 60) / 60 * 0.4;
+    var pct = discountPct(deal);
+    var major = isMajorBrand(deal);
+    // Big-brand clearance is a top priority without turning the whole feed into ads.
+    var bonus = Math.min(pct, 80) / 80 * (major ? 1.7 : 0.9) + (major && pct >= 30 ? 0.55 : 0);
     // Deals with a known size problem (for example, the wrong inseam) sink in the deck.
     var penalty = (deal.fitIssue ? 0.5 : 0) + (deal.price > 110 ? Math.min(0.7, (deal.price - 110) / 300) : 0);
     return base + bonus - penalty;
@@ -124,18 +134,27 @@
   function buildDiscoveryQueue(deals, seen, weights, rand, mode) {
     rand = rand || Math.random;
     var unseen = deals.filter(function (d) { return !seen[d.id]; });
+    if (mode === 'steals') return unseen.filter(function (d) { return isBigBrandSteal(d); })
+      .sort(function (a, b) { return discountPct(b) - discountPct(a) || score(b, weights) - score(a, weights); });
     if (mode === 'deals') return buildQueue(unseen.filter(isDeal), {}, weights, rand, 0.15);
     if (mode === 'explore') return shuffle(unseen, rand);
     var ranked = unseen.slice().sort(function (a, b) { return score(b, weights) - score(a, weights); });
     var dealsRanked = ranked.filter(isDeal);
     var wild = shuffle(unseen, rand);
-    var out = [], used = {};
+    var out = [], used = {}, positions = { 'for-you': 0, deals: 0, explore: 0 };
     var slots = ['for-you','for-you','deals','for-you','explore','for-you','deals','for-you','explore','for-you',
       'for-you','deals','for-you','explore','for-you','deals','for-you','for-you','deals','for-you'];
     while (out.length < unseen.length) {
       var kind = slots[out.length % 20];
       var pool = kind === 'deals' ? dealsRanked : kind === 'explore' ? wild : ranked;
-      var choice = pool.find(function (d) { return !used[d.id]; }) || ranked.find(function (d) { return !used[d.id]; });
+      var pos = positions[kind];
+      while (pos < pool.length && used[pool[pos].id]) pos++;
+      positions[kind] = pos + 1;
+      var choice = pool[pos];
+      if (!choice) {
+        while (positions['for-you'] < ranked.length && used[ranked[positions['for-you']].id]) positions['for-you']++;
+        choice = ranked[positions['for-you']++];
+      }
       if (!choice) break;
       used[choice.id] = true;
       out.push(Object.assign({}, choice, { lane: kind === 'deals' && isDeal(choice) ? 'deals' : kind === 'explore' ? 'explore' : 'for-you' }));
@@ -178,7 +197,7 @@
   }
 
   var api = {
-    PRIORS: PRIORS, priceBand: priceBand, discountPct: discountPct, isDeal: isDeal, featuresOf: featuresOf,
+    PRIORS: PRIORS, priceBand: priceBand, discountPct: discountPct, isDeal: isDeal, isMajorBrand: isMajorBrand, isBigBrandSteal: isBigBrandSteal, featuresOf: featuresOf,
     score: score, learn: learn, unlearn: unlearn, buildQueue: buildQueue, buildDiscoveryQueue: buildDiscoveryQueue, summarize: summarize,
     prettyKey: prettyKey, safeUrl: safeUrl
   };

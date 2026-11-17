@@ -12,6 +12,8 @@
   var priceFilter = 'all';
   var brandFilter = 'all';
   var labelFilter = 'all';
+  var genderFilter = 'men';
+  var stealsDiscount = 30;
 
   function $(id) { return document.getElementById(id); }
 
@@ -23,6 +25,8 @@
     state.history = (stored && stored.history) || [];
     state.saved = (stored && stored.saved) || {};
     state.weights = Object.assign({}, T.PRIORS, (stored && stored.weights) || {});
+    try { genderFilter = localStorage.getItem('styleSwipe.department') || 'men'; } catch (e) { genderFilter = 'men'; }
+    if (!['men', 'women', 'all'].includes(genderFilter)) genderFilter = 'men';
   }
   function persist() {
     try {
@@ -135,6 +139,8 @@
     if (top) seenNow[top.id] = 'locked';
     var filtered = data.deals.filter(function (d) {
       return !(state.hiddenImages || {})[d.id] &&
+        (genderFilter === 'all' || d.gender === genderFilter || d.gender === 'unisex' || !d.gender) &&
+        (feedMode !== 'steals' || T.isBigBrandSteal(d, stealsDiscount)) &&
         (categoryFilter === 'all' || d.category === categoryFilter) &&
         (priceFilter === 'all' || d.price <= Number(priceFilter)) &&
         (brandFilter === 'all' || d.brand === brandFilter) &&
@@ -149,6 +155,9 @@
     stack.textContent = '';
     var has = queue.length > 0;
     $('empty').hidden = has || !!$('load-error').dataset.on;
+    $('empty-description').textContent = feedMode === 'steals'
+      ? 'No qualifying major-brand markdowns in the current catalog. Try 30%+, another department, or add approved brand feeds and refresh the catalog.'
+      : 'No more clothing matches in this feed. Try another category or Explore. New items appear when the catalog is refreshed.';
     $('controls').hidden = !has;
     $('hint').hidden = !has || Object.keys(state.seen).length > 2;
     if (!has) return;
@@ -383,12 +392,30 @@
 
   function init() {
     load();
+    document.querySelectorAll('.gender-mode').forEach(function (b) {
+      b.classList.toggle('is-active', b.dataset.gender === genderFilter);
+      b.setAttribute('aria-pressed', b.dataset.gender === genderFilter ? 'true' : 'false');
+      b.addEventListener('click', function () {
+        genderFilter = b.dataset.gender;
+        try { localStorage.setItem('styleSwipe.department', genderFilter); } catch (e) {}
+        document.querySelectorAll('.gender-mode').forEach(function (x) {
+          x.classList.toggle('is-active', x === b);
+          x.setAttribute('aria-pressed', x === b ? 'true' : 'false');
+        });
+        rebuildQueue(false); renderDeck();
+      });
+    });
     document.querySelectorAll('.feed-mode').forEach(function (b) {
       b.addEventListener('click', function () {
         feedMode = b.dataset.mode;
         document.querySelectorAll('.feed-mode').forEach(function (x) { x.classList.toggle('is-active', x === b); });
+        $('steals-tools').hidden = feedMode !== 'steals';
         rebuildQueue(false); renderDeck();
       });
+    });
+    $('steals-discount').addEventListener('change', function (e) {
+      stealsDiscount = Number(e.target.value) || 30;
+      rebuildQueue(false); renderDeck();
     });
     $('category-filter').addEventListener('change', function (e) { categoryFilter = e.target.value; rebuildQueue(false); renderDeck(); });
     $('price-filter').addEventListener('change', function (e) { priceFilter = e.target.value; rebuildQueue(false); renderDeck(); });

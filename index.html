@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-180.png">
-<link rel="stylesheet" href="styles.css?v=20261117c">
+<link rel="stylesheet" href="styles.css?v=20261117e">
 </head>
 <body>
 <div class="app">
@@ -32,10 +32,20 @@
   <main>
     <section id="view-swipe" class="view is-active" aria-labelledby="tab-swipe">
       <div class="discovery-toolbar">
+        <div class="gender-modes" role="group" aria-label="Clothing department">
+          <button class="gender-mode is-active" data-gender="men" aria-pressed="true">Men</button>
+          <button class="gender-mode" data-gender="women" aria-pressed="false">Women</button>
+          <button class="gender-mode" data-gender="all" aria-pressed="false">All</button>
+        </div>
         <div class="feed-modes" role="group" aria-label="Feed type">
           <button class="feed-mode is-active" data-mode="for-you">For You <span>60%</span></button>
           <button class="feed-mode" data-mode="deals">Deals <span>25%</span></button>
           <button class="feed-mode" data-mode="explore">Explore <span>15%</span></button>
+          <button class="feed-mode steals" data-mode="steals">Big Brand Steals <span>30%+</span></button>
+        </div>
+        <div id="steals-tools" class="steals-tools" hidden>
+          <label>Minimum discount <select id="steals-discount"><option value="30">30%+ off</option><option value="50">50%+ off</option><option value="70">70%+ off</option></select></label>
+          <a href="https://slickdeals.net/deal-alerts/" target="_blank" rel="noopener noreferrer">Set brand deal alerts ↗</a>
         </div>
         <div class="feed-filters">
           <label>Category <select id="category-filter"><option value="all">All clothing</option><option value="tops">Tops</option><option value="outerwear">Jackets</option><option value="bottoms">Pants</option><option value="shoes">Shoes</option><option value="accessories">Accessories</option></select></label>
@@ -47,7 +57,7 @@
       <div id="stack" class="stack" aria-live="polite"></div>
       <div id="empty" class="empty" hidden>
         <h2>You're all caught up</h2>
-        <p>No more clothing matches in this feed. Try another category or Explore. New items appear when the catalog is refreshed.</p>
+        <p id="empty-description">No more clothing matches in this feed. Try another category or Explore. New items appear when the catalog is refreshed.</p>
         <button id="reshow" class="btn ghost">Show passed deals again</button>
       </div>
       <div id="load-error" class="empty" hidden>
@@ -93,7 +103,7 @@
     </section>
   </main>
 </div>
-<script src="taste.js?v=20261117c"></script>
-<script src="app.js?v=20261117c"></script>
+<script src="taste.js?v=20261117e"></script>
+<script src="app.js?v=20261117e"></script>
 </body>
 </html>
