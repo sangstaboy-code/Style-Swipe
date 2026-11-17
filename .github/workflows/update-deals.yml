@@ -1,0 +1,34 @@
+name: Refresh verified clothing deals
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '15 14 * * *'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Collect public keyless storefront catalogs
+        run: node scripts/collect-keyless.mjs
+      - name: Collect authorized sources
+        env:
+          EBAY_CLIENT_ID: ${{ secrets.EBAY_CLIENT_ID }}
+          EBAY_CLIENT_SECRET: ${{ secrets.EBAY_CLIENT_SECRET }}
+          PRODUCT_FEEDS_JSON: ${{ secrets.PRODUCT_FEEDS_JSON }}
+        run: node scripts/collect-products.mjs keyless-products.json
+      - name: Validate photos and publish snapshot
+        run: node scripts/refresh-deals.mjs incoming-products.json
+      - name: Commit updated deals
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add deals.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Refresh verified clothing deals"
+            git push
+          fi
