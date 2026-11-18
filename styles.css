@@ -360,3 +360,15 @@ main { overflow: hidden; }
   .badge { left: calc(50% - 94px); }
   .new,.wild { right: calc(50% - 94px); }
 }
+
+/* Minimal swipe-first layout: no hero, no editorial copy above the products. */
+#view-swipe { padding-top: 20px; }
+.discovery-toolbar { margin: 0 auto 18px; gap: 9px; }
+.stack { margin-top: 6px; }
+.site-head { border-bottom: 1px solid rgba(190,150,108,.15); }
+.filter-drawer { margin-top: 0; }
+.filter-drawer summary { opacity: .83; }
+@media (max-width: 500px) {
+  #view-swipe { padding-top: 13px; }
+  .discovery-toolbar { margin-bottom: 12px; }
+}
