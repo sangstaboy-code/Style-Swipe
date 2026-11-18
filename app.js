@@ -73,14 +73,11 @@
       img.draggable = false;
       img.addEventListener('load', function () { box.classList.add('has-img'); });
       img.addEventListener('error', function () {
-        // Never leave a blank photo card in the swipe deck.
+        // Retailers frequently block off-site product images. Keep the product
+        // and its shop link usable instead of recursively discarding the deck.
         img.remove();
-        if (cls === 'media') {
-          state.hiddenImages = state.hiddenImages || {};
-          state.hiddenImages[deal.id] = true;
-          queue = queue.filter(function (item) { return item.id !== deal.id; });
-          renderDeck();
-        }
+        box.classList.add('image-unavailable');
+        ph.textContent = 'View at ' + deal.store;
       });
       img.src = src;
       box.appendChild(img);
@@ -157,6 +154,11 @@
     $('controls').hidden = !has;
     $('hint').hidden = !has || Object.keys(state.seen).length > 2;
     if (!has) return;
+    if (queue[2]) {
+      var leftPreview = buildCard(queue[2], false);
+      leftPreview.classList.add('previous');
+      stack.appendChild(leftPreview);
+    }
     if (queue[1]) stack.appendChild(buildCard(queue[1], false));
     stack.appendChild(buildCard(queue[0], true));
     var left = queue.length;
