@@ -13,7 +13,6 @@
   var brandFilter = 'all';
   var labelFilter = 'all';
   var genderFilter = 'men';
-  var stealsDiscount = 30;
 
   function $(id) { return document.getElementById(id); }
 
@@ -140,7 +139,6 @@
     var filtered = data.deals.filter(function (d) {
       return !(state.hiddenImages || {})[d.id] &&
         (genderFilter === 'all' || d.gender === genderFilter || d.gender === 'unisex' || !d.gender) &&
-        (feedMode !== 'steals' || T.isBigBrandSteal(d, stealsDiscount)) &&
         (categoryFilter === 'all' || d.category === categoryFilter) &&
         (priceFilter === 'all' || d.price <= Number(priceFilter)) &&
         (brandFilter === 'all' || d.brand === brandFilter) &&
@@ -155,9 +153,7 @@
     stack.textContent = '';
     var has = queue.length > 0;
     $('empty').hidden = has || !!$('load-error').dataset.on;
-    $('empty-description').textContent = feedMode === 'steals'
-      ? 'No qualifying major-brand markdowns in the current catalog. Try 30%+, another department, or add approved brand feeds and refresh the catalog.'
-      : 'No more clothing matches in this feed. Try another category or Explore. New items appear when the catalog is refreshed.';
+    $('empty-description').textContent = 'No more clothing matches in this feed. Try another category or Explore. New items appear when the catalog is refreshed.';
     $('controls').hidden = !has;
     $('hint').hidden = !has || Object.keys(state.seen).length > 2;
     if (!has) return;
@@ -409,13 +405,8 @@
       b.addEventListener('click', function () {
         feedMode = b.dataset.mode;
         document.querySelectorAll('.feed-mode').forEach(function (x) { x.classList.toggle('is-active', x === b); });
-        $('steals-tools').hidden = feedMode !== 'steals';
         rebuildQueue(false); renderDeck();
       });
-    });
-    $('steals-discount').addEventListener('change', function (e) {
-      stealsDiscount = Number(e.target.value) || 30;
-      rebuildQueue(false); renderDeck();
     });
     $('category-filter').addEventListener('change', function (e) { categoryFilter = e.target.value; rebuildQueue(false); renderDeck(); });
     $('price-filter').addEventListener('change', function (e) { priceFilter = e.target.value; rebuildQueue(false); renderDeck(); });
@@ -449,7 +440,7 @@
       clearTimeout(timer);
       data.updated = j.updated || '';
       data.deals = (j.deals || []).filter(function (d) {
-        return d && d.id && d.name && d.brand && d.store && T.safeUrl(d.url) && T.safeUrl(d.image) &&
+        return d && d.id && d.name && d.brand && d.store && T.isWearable(d) && T.safeUrl(d.url) && T.safeUrl(d.image) &&
           Number.isFinite(d.price) && d.price > 0 && (!Number.isFinite(d.was) || d.was >= d.price);
       });
       var brands = Array.from(new Set(data.deals.map(function (d) { return d.brand; }))).sort();

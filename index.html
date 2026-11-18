@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Style Swipe</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#16130f">
+<meta name="theme-color" content="#10291d">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -13,13 +13,13 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-180.png">
-<link rel="stylesheet" href="styles.css?v=20261117e">
+<link rel="stylesheet" href="styles.css?v=20261118a">
 </head>
 <body>
 <div class="app">
   <header class="site-head">
     <div class="brand">
-      <h1>Style Swipe</h1>
+      <h1>Style <em>Swipe</em></h1>
       <p id="updated" class="sub">Loading deals</p>
     </div>
     <nav class="tabs" role="tablist" aria-label="Sections">
@@ -38,20 +38,19 @@
           <button class="gender-mode" data-gender="all" aria-pressed="false">All</button>
         </div>
         <div class="feed-modes" role="group" aria-label="Feed type">
-          <button class="feed-mode is-active" data-mode="for-you">For You <span>60%</span></button>
-          <button class="feed-mode" data-mode="deals">Deals <span>25%</span></button>
-          <button class="feed-mode" data-mode="explore">Explore <span>15%</span></button>
-          <button class="feed-mode steals" data-mode="steals">Big Brand Steals <span>30%+</span></button>
+          <button class="feed-mode is-active" data-mode="for-you">Discover</button>
+          <button class="feed-mode" data-mode="deals">On Sale</button>
+          <button class="feed-mode" data-mode="explore">Explore</button>
         </div>
-        <div id="steals-tools" class="steals-tools" hidden>
-          <label>Minimum discount <select id="steals-discount"><option value="30">30%+ off</option><option value="50">50%+ off</option><option value="70">70%+ off</option></select></label>
-          <a href="https://slickdeals.net/deal-alerts/" target="_blank" rel="noopener noreferrer">Set brand deal alerts ↗</a>
-        </div>
-        <div class="feed-filters">
-          <label>Category <select id="category-filter"><option value="all">All clothing</option><option value="tops">Tops</option><option value="outerwear">Jackets</option><option value="bottoms">Pants</option><option value="shoes">Shoes</option><option value="accessories">Accessories</option></select></label>
+        <details class="filter-drawer">
+          <summary>Refine your selection <span aria-hidden="true">＋</span></summary>
+          <div class="feed-filters">
+          <label>Category <select id="category-filter"><option value="all">Clothing & shoes</option><option value="tops">Tops</option><option value="outerwear">Jackets</option><option value="bottoms">Pants</option><option value="shoes">Shoes</option></select></label>
           <label>Price <select id="price-filter"><option value="all">Any price</option><option value="110">Under $110</option><option value="60">Under $60</option><option value="30">Under $30</option></select></label>
           <label>Brand <select id="brand-filter"><option value="all">All brands</option></select></label>
           <label>Labels <select id="label-filter"><option value="all">All</option><option value="indie">Independent</option></select></label>
+          </div>
+        </details>
         </div>
       </div>
       <div id="stack" class="stack" aria-live="polite"></div>
@@ -103,7 +102,7 @@
     </section>
   </main>
 </div>
-<script src="taste.js?v=20261117e"></script>
-<script src="app.js?v=20261117e"></script>
+<script src="taste.js?v=20261118a"></script>
+<script src="app.js?v=20261118a"></script>
 </body>
 </html>

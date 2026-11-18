@@ -56,9 +56,22 @@
     return Math.max(0, Math.round((1 - deal.price / deal.was) * 100));
   }
   function isDeal(deal) { return !!deal && deal.was > deal.price && discountPct(deal) >= 10; }
-  function isMajorBrand(deal) {
-    var name = [deal && deal.brand, deal && deal.store].filter(Boolean).join(' ').toLowerCase();
-    return /\b(nike|carhartt|skims|adidas|calvin klein|levi'?s|the north face|patagonia|ralph lauren|polo|new balance|converse|vans|under armour|puma|reebok|gap|abercrombie|hollister|american eagle|champion|columbia|lululemon|urban outfitters|h&m|zara|uniqlo|asos|gymshark|alo yoga|vuori|birkenstock|dr martens|timberland|coach|tommy hilfiger|dickies|crocs|brooks|asics|on running|allbirds)\b/i.test(name);
+  var BRAND_TIERS = [
+    ['nike','adidas','skims','american eagle','arcteryx','arc\'teryx','carhartt','the north face','patagonia','lululemon','new balance','levi\'s','levis','zara','h&m','uniqlo','ralph lauren','calvin klein'],
+    ['converse','vans','under armour','puma','reebok','gap','abercrombie','hollister','champion','columbia','urban outfitters','asos','gymshark','alo yoga','vuori','birkenstock','dr martens','timberland','tommy hilfiger','dickies','crocs','brooks','asics','on running','allbirds','free people','madewell','everlane','j crew','j.crew','aerie','banana republic','fila','salomon','wrangler','dockers','superdry','barbour','outerknown','taylor stitch','tentree','rag & bone','rag and bone','polo ralph lauren']
+  ];
+  function brandTier(deal) {
+    // The merchant is not the manufacturer: a Nike item from Nordstrom is Nike.
+    var name = String(deal && deal.brand || '').toLowerCase().replace(/[’]/g, "'").trim();
+    for (var i = 0; i < BRAND_TIERS.length; i++) if (BRAND_TIERS[i].some(function (b) { return name === b || name.startsWith(b + ' '); })) return i === 0 ? 2 : 1;
+    return 0;
+  }
+  function isMajorBrand(deal) { return brandTier(deal) > 0; }
+  function isWearable(deal) {
+    if (!deal || deal.category === 'accessories') return false;
+    var name = String(deal.name || deal.title || '').toLowerCase();
+    if (/\b(hat|cap|beanie|belt|wallet|bag|backpack|tote|purse|scarf|socks?|underwear|briefs|boxers|bra|jewelry|jewellery|earrings?|necklace|bracelet|ring|watch|sunglasses|eyewear|glasses|keychain|gloves|mittens|perfume|cologne|candle|blanket|towel|water bottle|gift card|phone case|patch|sticker)\b/.test(name)) return false;
+    return ['tops','outerwear','bottoms','shoes','dresses'].indexOf(deal.category) >= 0;
   }
   function isBigBrandSteal(deal, minimum) {
     return isMajorBrand(deal) && discountPct(deal) >= (minimum == null ? 30 : minimum);
@@ -89,7 +102,7 @@
     var bonus = Math.min(pct, 80) / 80 * (major ? 1.7 : 0.9) + (major && pct >= 30 ? 0.55 : 0);
     // Deals with a known size problem (for example, the wrong inseam) sink in the deck.
     var penalty = (deal.fitIssue ? 0.5 : 0) + (deal.price > 110 ? Math.min(0.7, (deal.price - 110) / 300) : 0);
-    return base + bonus - penalty;
+    return base + bonus + brandTier(deal) * 0.35 - penalty;
   }
 
   // Applies a swipe to the weights and returns the deltas so it can be undone.
@@ -134,10 +147,8 @@
   function buildDiscoveryQueue(deals, seen, weights, rand, mode) {
     rand = rand || Math.random;
     var unseen = deals.filter(function (d) { return !seen[d.id]; });
-    if (mode === 'steals') return unseen.filter(function (d) { return isBigBrandSteal(d); })
-      .sort(function (a, b) { return discountPct(b) - discountPct(a) || score(b, weights) - score(a, weights); });
-    if (mode === 'deals') return buildQueue(unseen.filter(isDeal), {}, weights, rand, 0.15);
-    if (mode === 'explore') return shuffle(unseen, rand);
+    if (mode === 'deals') return balanceBrands(buildQueue(unseen.filter(isDeal), {}, weights, rand, 0.15));
+    if (mode === 'explore') return balanceBrands(shuffle(unseen, rand));
     var ranked = unseen.slice().sort(function (a, b) { return score(b, weights) - score(a, weights); });
     var dealsRanked = ranked.filter(isDeal);
     var wild = shuffle(unseen, rand);
@@ -158,6 +169,42 @@
       if (!choice) break;
       used[choice.id] = true;
       out.push(Object.assign({}, choice, { lane: kind === 'deals' && isDeal(choice) ? 'deals' : kind === 'explore' ? 'explore' : 'for-you' }));
+    }
+    return balanceBrands(out);
+  }
+  // Across the discovery deck aim for three established-brand products in every
+  // five cards. Never repeat or fabricate items when approved sources are sparse.
+  function balanceBrands(items) {
+    var brandGroups = {};
+    items.filter(isMajorBrand).forEach(function (d) {
+      var key = String(d.brand).toLowerCase();
+      (brandGroups[key] = brandGroups[key] || []).push(d);
+    });
+    var keys = Object.keys(brandGroups).sort(function (a,b) {
+      return brandTier(brandGroups[b][0]) - brandTier(brandGroups[a][0]) || brandGroups[b].length - brandGroups[a].length;
+    });
+    var established = [];
+    // Interleave labels to avoid a giant single-retailer catalog swallowing the deck.
+    // Large household-name brands receive two picks per round, medium brands one.
+    while (keys.length) {
+      keys.slice().forEach(function (key) {
+        var group = brandGroups[key];
+        var allowance = brandTier(group[0]) === 2 ? 2 : 1;
+        while (allowance-- > 0 && group.length) established.push(group.shift());
+        if (!group.length) keys.splice(keys.indexOf(key), 1);
+      });
+    }
+    var indie = items.filter(function (d) { return !isMajorBrand(d); });
+    var out = [], a = 0, b = 0;
+    var slots = [true,true,false,true,false];
+    for (var i = 0; i < items.length; i++) {
+      var preferBrand = slots[i % slots.length];
+      var next = preferBrand ? established[a++] : indie[b++];
+      if (!next) {
+        if (preferBrand) { a--; next = indie[b++]; }
+        else { b--; next = established[a++]; }
+      }
+      if (next) out.push(next);
     }
     return out;
   }
@@ -197,7 +244,7 @@
   }
 
   var api = {
-    PRIORS: PRIORS, priceBand: priceBand, discountPct: discountPct, isDeal: isDeal, isMajorBrand: isMajorBrand, isBigBrandSteal: isBigBrandSteal, featuresOf: featuresOf,
+    PRIORS: PRIORS, priceBand: priceBand, discountPct: discountPct, isDeal: isDeal, isMajorBrand: isMajorBrand, brandTier: brandTier, isWearable: isWearable, isBigBrandSteal: isBigBrandSteal, featuresOf: featuresOf,
     score: score, learn: learn, unlearn: unlearn, buildQueue: buildQueue, buildDiscoveryQueue: buildDiscoveryQueue, summarize: summarize,
     prettyKey: prettyKey, safeUrl: safeUrl
   };

@@ -1,5 +1,13 @@
 # Style Swipe — Discover
 
+## November 18, 2026 update
+
+- Updated to a forest-green and gold editorial design with serif headlines. The Big Brand Steals button is removed and optional filters now live in **Refine your selection**.
+- Discover, On Sale, and Explore aim for **60% established brands / 40% smaller brands**, in groups of five where inventory allows. Leading global brands receive preference over medium-size names, with no invented or repeated merchandise.
+- The app hides accessories, and the collectors exclude common accessory categories. The keyless collector now includes women's items and import mapping preserves women's/men's department metadata.
+- More multi-brand boutiques and major retailers were added as **candidate sources** in `keyless-sources.json`. Candidate is not verified catalog access; the collector checks robots.txt and skips stores with blocked or unsupported endpoints. Large retailers generally require authorized affiliate feeds through `PRODUCT_FEEDS_JSON`. Check GitHub Actions logs to see actual coverage.
+- The existing daily scheduled update continues to work without credentials.
+
 A swipe app for clothing discovery and deals. Swipe right to save, left to pass. It learns your taste as you go. The **For You** feed targets a 60% personalized / 25% discounted / 15% exploratory mix when enough catalog inventory exists. Dedicated **Deals** and **Explore** modes, brand/category/price filters, and a saved list are included. The ratio is a target, not a promise when source inventory is sparse.
 
 ## Style reference update — November 17, 2026
